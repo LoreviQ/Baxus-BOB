@@ -35,8 +35,13 @@ export const handleMessage = async (req: Request<{}, {}, MessageRequest>, res: R
         
         res.json({ 
             status: 'success', 
-            thread: threadDoc._id.toString(),
-            response: bobResponse.content
+            message : {
+                id: bobResponse._id,
+                thread_id: bobResponse.thread_id,
+                content: bobResponse.content,
+                sender_type: bobResponse.sender_type,
+                created_at: bobResponse.created_at
+            }
         });
     } catch (error) {
         console.error('Error handling message:', error);
