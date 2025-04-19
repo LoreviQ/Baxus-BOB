@@ -1,8 +1,10 @@
-import { Router } from 'express';
-import { handleMessage } from '@/controllers/BOB';
+import express from 'express';
+import { handleMessage, getThreadMessages, getUserThreads } from '../controllers/BOB';
 
-const router = Router();
+const router = express.Router();
 
-router.post('/bob/message', handleMessage);
+router.post('/message', handleMessage);
+router.get('/thread/:threadId/messages', getThreadMessages);
+router.get('/user/:username/threads', getUserThreads);
 
 export default router;

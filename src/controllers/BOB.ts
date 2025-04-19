@@ -1,16 +1,65 @@
 import { Request, Response } from 'express';
+import mongoose from 'mongoose';
+import { createMessage, getMessagesByThread } from '../models/Message';
+import { createThread, getThreadById, getThreadsByUsername, ThreadDocument } from '../models/Thread';
 
 interface MessageRequest {
     username: string;
-    thread: number;
+    thread: string;
     content: string;
 }
 
-export const handleMessage = (req: Request<{}, {}, MessageRequest>, res: Response) => {
-    const { username, thread, content } = req.body;
-    
-    // Log the received details
-    console.log(`Received message from ${username} in thread ${thread}: ${content}`);
-    
-    res.json({ status: 'success', message: 'Message details received' });
+export const handleMessage = async (req: Request<{}, {}, MessageRequest>, res: Response) => {
+    try {
+        const { username, thread, content } = req.body;
+        
+        // If no thread ID is provided, create a new thread
+        let threadDoc = thread ? await getThreadById(thread) : null;
+        if (!threadDoc) {
+            const newThread = await createThread(username);
+            threadDoc = newThread as mongoose.Document<unknown, {}, ThreadDocument> & 
+                                  ThreadDocument & 
+                                  Required<{ _id: mongoose.Types.ObjectId }> & 
+                                  { __v: number };
+        }
+
+        if (!threadDoc) {
+            throw new Error('Failed to create or retrieve thread');
+        }
+
+        // Store the user's message
+        await createMessage(threadDoc._id.toString(), 'user', content);
+        
+        // For now, just echo the message back as BOB's response
+        const bobResponse = await createMessage(threadDoc._id.toString(), 'BOB', `You said: ${content}`);
+        
+        res.json({ 
+            status: 'success', 
+            thread: threadDoc._id.toString(),
+            response: bobResponse.content
+        });
+    } catch (error) {
+        console.error('Error handling message:', error);
+        res.status(500).json({ status: 'error', message: 'Internal server error' });
+    }
+};
+
+export const getThreadMessages = async (req: Request<{ threadId: string }>, res: Response) => {
+    try {
+        const messages = await getMessagesByThread(req.params.threadId);
+        res.json({ status: 'success', messages });
+    } catch (error) {
+        console.error('Error fetching messages:', error);
+        res.status(500).json({ status: 'error', message: 'Internal server error' });
+    }
+};
+
+export const getUserThreads = async (req: Request<{ username: string }>, res: Response) => {
+    try {
+        const threads = await getThreadsByUsername(req.params.username);
+        res.json({ status: 'success', threads });
+    } catch (error) {
+        console.error('Error fetching threads:', error);
+        res.status(500).json({ status: 'error', message: 'Internal server error' });
+    }
 };
