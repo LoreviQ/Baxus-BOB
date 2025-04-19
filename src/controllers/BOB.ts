@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import mongoose from 'mongoose';
-import { createMessage, getMessagesByThread } from '../models/Message';
-import { createThread, getThreadById, getThreadsByUsername, ThreadDocument } from '../models/Thread';
+import { createMessage, getMessagesByThread } from '@/models/Message';
+import { createThread, getThreadById, getThreadsByUsername, ThreadDocument } from '@/models/Thread';
 
 interface MessageRequest {
     username: string;

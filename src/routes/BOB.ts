@@ -1,5 +1,5 @@
 import express from 'express';
-import { handleMessage, getThreadMessages, getUserThreads } from '../controllers/BOB';
+import { handleMessage, getThreadMessages, getUserThreads } from '@/controllers/BOB';
 
 const router = express.Router();
 

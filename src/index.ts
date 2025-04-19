@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
-import { connectDB } from './config/database';
-import BOBRouter from './routes/BOB';
+import { connectDB } from '@/config/database';
+import BOBRouter from '@/routes/BOB';
 
 const app = express();
 const port = process.env.PORT || 3000;
