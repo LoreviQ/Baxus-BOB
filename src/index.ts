@@ -18,7 +18,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 // API routes
-app.use('/v1', BOBRouter);
+app.use('/api/v1', BOBRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
