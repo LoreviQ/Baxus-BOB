@@ -1,5 +1,6 @@
-import  { type Provider, wrapInJsonBlock } from '@olivertj/agent-builder';
+import { type Provider, wrapInJsonBlock } from '@olivertj/agent-builder';
 import { BarDataAPI, BarContent, WhiskeyContent } from '@/types';
+import { getUserKnowledge } from '@/models/UserKnowledge';
 import axios from 'axios';
 
 export const barProvider = (username: string): Provider => ({
@@ -45,5 +46,20 @@ export const datasetProvider = (): Provider => ({
         }));
         whiskeyConent = whiskeyConent.slice(0, 10); // Limit to 10 items for performance
         return wrapInJsonBlock(JSON.stringify(whiskeyConent, null, 2));
+    }
+});
+
+export const knowledgeProvider = (username: string): Provider => ({
+    key: 'knowledge',
+    type: 'system',
+    index: 2,
+    title: `Knowledge about ${username}`,
+    execute: async () => {
+        const userKnowledge = await getUserKnowledge(username);
+        const knowledge = userKnowledge?.knowledge || {};
+        if (Object.keys(knowledge).length === 0) {
+            throw new Error(`No knowledge found for user: ${username}`);
+        }
+        return wrapInJsonBlock(JSON.stringify(knowledge, null, 2));
     }
 });

@@ -1,5 +1,5 @@
 import { AgentBuilder, systemProvider, AgentBuilderSettings } from "@olivertj/agent-builder"
-import { BOBPrompts, barProvider, datasetProvider } from "@/agent"
+import { BOBPrompts, barProvider, datasetProvider, knowledgeProvider } from "@/agent"
 import fs from 'fs'
 import path from 'path'
 
@@ -9,6 +9,7 @@ export async function buildBOB(username:string): Promise<AgentBuilder> {
     }
     const bob = new AgentBuilder(BOBPrompts.PROMPT.prefix, config)
     bob.setProvider(systemProvider(BOBPrompts.SYSTEM.prefix))
+    bob.setProvider(knowledgeProvider(username))
     bob.setProvider(barProvider(username))
     bob.setProvider(datasetProvider())
     const system = await bob.system()
