@@ -32,7 +32,7 @@ export const handleMessage = async (req: Request<{}, {}, MessageRequest>, res: R
         await createMessage(threadDoc._id.toString(), 'user', content);
         
         // -------- BOB LOGIC HERE --------
-        const bob = buildBOB();
+        const bob = buildBOB(username);
         const bobsMessage = await bob.generateResponse();
         const bobsMessageString = typeof bobsMessage === 'string' ? bobsMessage : JSON.stringify(bobsMessage);
         // --------------------------------
