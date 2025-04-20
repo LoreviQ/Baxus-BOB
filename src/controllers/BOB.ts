@@ -10,6 +10,10 @@ interface MessageRequest {
     content: string;
 }
 
+const defaultMessage = `Hello! I'm BOB, the BAXUS Outstanding Butler, your friendly whiskey expert and AI assistant within the BAXUS ecosystem. I noticed you've been building up a fascinating virtual bar!
+
+If you're open to it, I'd love to analyze your current collection. I can then provide personalized recommendations for new bottles based on your apparent preferences. Think of me as your guide to discovering your next favorite dram!`;
+
 export const handleMessage = async (req: Request<{}, {}, MessageRequest>, res: Response) => {
     try {
         const { username, thread, content } = req.body;
@@ -29,6 +33,8 @@ export const handleMessage = async (req: Request<{}, {}, MessageRequest>, res: R
         }
         const threadId = threadDoc._id.toString();
 
+        // Store the bob's initial message
+        await createMessage(threadId, 'BOB', defaultMessage);
         // Store the user's message
         await createMessage(threadId, 'user', content);
         
