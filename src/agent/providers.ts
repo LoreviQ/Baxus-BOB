@@ -31,7 +31,7 @@ export const datasetProvider = (): Provider => ({
     title: 'Whiskey Dataset',
     execute: async () => {
         const dataset = global.whiskeyData;
-        const whiskeyConent: WhiskeyContent[] = dataset.map(item => ({
+        let whiskeyConent: WhiskeyContent[] = dataset.map(item => ({
             name: item.name,
             size: item.size,
             proof: item.proof,
@@ -43,6 +43,7 @@ export const datasetProvider = (): Provider => ({
             shelf_price: item.shelf_price,
             ranking: item.ranking
         }));
+        whiskeyConent = whiskeyConent.slice(0, 10); // Limit to 10 items for performance
         return wrapInJsonBlock(JSON.stringify(whiskeyConent, null, 2));
     }
 });
