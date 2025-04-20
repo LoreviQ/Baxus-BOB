@@ -1,6 +1,7 @@
 import { type Provider, wrapInJsonBlock } from '@olivertj/agent-builder';
 import { BarDataAPI, BarContent, WhiskeyContent } from '@/types';
 import { getUserKnowledge } from '@/models/UserKnowledge';
+import { getMessagesByThread } from '@/models/Message';
 import axios from 'axios';
 
 export const barProvider = (username: string): Provider => ({
@@ -61,5 +62,19 @@ export const knowledgeProvider = (username: string): Provider => ({
             throw new Error(`No knowledge found for user: ${username}`);
         }
         return wrapInJsonBlock(JSON.stringify(knowledge, null, 2));
+    }
+});
+
+export const messageHistoryProvider = (threadId: string): Provider => ({
+    key: 'message_history',
+    type: 'prompt',
+    index: 0,
+    title: `Message History`,
+    execute: async () => {
+        const messages = await getMessagesByThread(threadId);
+        if (!messages || messages.length === 0) {
+            throw new Error(`No messages found for thread: ${threadId}`);
+        }
+        return wrapInJsonBlock(JSON.stringify(messages, null, 2));
     }
 });

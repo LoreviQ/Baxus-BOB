@@ -27,18 +27,19 @@ export const handleMessage = async (req: Request<{}, {}, MessageRequest>, res: R
         if (!threadDoc) {
             throw new Error('Failed to create or retrieve thread');
         }
+        const threadId = threadDoc._id.toString();
 
         // Store the user's message
-        await createMessage(threadDoc._id.toString(), 'user', content);
+        await createMessage(threadId, 'user', content);
         
         // -------- BOB LOGIC HERE --------
-        const bob = await buildBOB(username);
+        const bob = await buildBOB(username, threadId);
         const bobsMessage = await bob.generateResponse();
         const bobsMessageString = typeof bobsMessage === 'string' ? bobsMessage : JSON.stringify(bobsMessage);
         // --------------------------------
 
         // Store BOB's response
-        const bobResponse = await createMessage(threadDoc._id.toString(), 'BOB', bobsMessageString);
+        const bobResponse = await createMessage(threadId, 'BOB', bobsMessageString);
 
         res.json({ 
             status: 'success', 
