@@ -1,6 +1,9 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { connectDB } from '@/config/database';
 import BOBRouter from '@/routes/BOB';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;

@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { createMessage, getMessagesByThread } from '@/models/Message';
 import { createThread, getThreadById, getThreadsByUsername, ThreadDocument } from '@/models/Thread';
+import { buildBOB } from '@/agent/BOB';
 
 interface MessageRequest {
     username: string;
@@ -30,9 +31,15 @@ export const handleMessage = async (req: Request<{}, {}, MessageRequest>, res: R
         // Store the user's message
         await createMessage(threadDoc._id.toString(), 'user', content);
         
-        // For now, just echo the message back as BOB's response
-        const bobResponse = await createMessage(threadDoc._id.toString(), 'BOB', `You said: ${content}`);
-        
+        // -------- BOB LOGIC HERE --------
+        const bob = buildBOB();
+        const bobsMessage = await bob.generateResponse();
+        const bobsMessageString = typeof bobsMessage === 'string' ? bobsMessage : JSON.stringify(bobsMessage);
+        // --------------------------------
+
+        // Store BOB's response
+        const bobResponse = await createMessage(threadDoc._id.toString(), 'BOB', bobsMessageString);
+
         res.json({ 
             status: 'success', 
             message : {
