@@ -2,7 +2,21 @@ import { type Provider, wrapInJsonBlock } from '@olivertj/agent-builder';
 import { BarDataAPI, BarContent, WhiskeyContent } from '@/types';
 import { getUserKnowledge } from '@/models/UserKnowledge';
 import { getMessagesByThread } from '@/models/Message';
+import { getThreadById } from '@/models/Thread';
 import axios from 'axios';
+
+const formatTimeAgo = (timestamp: string): string => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffDays > 0) return `${diffDays} days ago`;
+    if (diffHours > 0) return `${diffHours} hours ago`;
+    return `${diffMins} minutes ago`;
+};
 
 export const barProvider = (username: string): Provider => ({
     key: 'bar',
@@ -72,9 +86,22 @@ export const messageHistoryProvider = (threadId: string): Provider => ({
     title: `Message History`,
     execute: async () => {
         const messages = await getMessagesByThread(threadId);
+        const thread = await getThreadById(threadId);
+        
         if (!messages || messages.length === 0) {
             throw new Error(`No messages found for thread: ${threadId}`);
         }
-        return wrapInJsonBlock(JSON.stringify(messages, null, 2));
+        
+        if (!thread) {
+            throw new Error(`Thread not found: ${threadId}`);
+        }
+
+        const formattedMessages = messages.map(msg => ({
+            sent_by: msg.sender_type === 'user' ? thread.username : 'BOB',
+            content: msg.content,
+            sent_at: formatTimeAgo(msg.created_at)
+        }));
+
+        return wrapInJsonBlock(JSON.stringify(formattedMessages, null, 2));
     }
 });

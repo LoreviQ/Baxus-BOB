@@ -7,10 +7,10 @@ export async function buildBOB(username:string, thread:string): Promise<AgentBui
     }
     const bob = new AgentBuilder(BOBPrompts.PROMPT.prefix, config)
     bob.setProvider(systemProvider(BOBPrompts.SYSTEM.prefix))
-    bob.setProvider(knowledgeProvider(username))
     bob.setProvider(barProvider(username))
     bob.setProvider(datasetProvider())
     bob.setProvider(messageHistoryProvider(thread))
+    bob.setProvider(knowledgeProvider(username))
     
     return bob
 }
