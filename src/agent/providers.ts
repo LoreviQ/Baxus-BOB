@@ -1,5 +1,5 @@
 import  { type Provider, wrapInJsonBlock } from '@olivertj/agent-builder';
-import { BarDataAPI, BarContent } from '@/types/BarData';
+import { BarDataAPI, BarContent, WhiskeyContent } from '@/types';
 import axios from 'axios';
 
 export const barProvider = (username: string): Provider => ({
@@ -21,5 +21,28 @@ export const barProvider = (username: string): Provider => ({
             popularity: item.product.popularity
         }));
         return wrapInJsonBlock(JSON.stringify(barContent, null, 2));
+    }
+});
+
+export const datasetProvider = (): Provider => ({
+    key: 'dataset',
+    type: 'system',
+    index: 1,
+    title: 'Whiskey Dataset',
+    execute: async () => {
+        const dataset = global.whiskeyData;
+        const whiskeyConent: WhiskeyContent[] = dataset.map(item => ({
+            name: item.name,
+            size: item.size,
+            proof: item.proof,
+            abv: item.abv,
+            spirit_type: item.spirit_type,
+            popularity: item.popularity,
+            avg_msrp: item.avg_msrp,
+            fair_price: item.fair_price,
+            shelf_price: item.shelf_price,
+            ranking: item.ranking
+        }));
+        return wrapInJsonBlock(JSON.stringify(whiskeyConent, null, 2));
     }
 });

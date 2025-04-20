@@ -1,4 +1,4 @@
-export interface WhiskeyData {
+export interface WhiskeyDataset {
     id: number;
     name: string;
     size: number;
@@ -17,3 +17,16 @@ export interface WhiskeyData {
     bar_count: number;
     ranking: number;
 }
+
+export type WhiskeyContent = Pick<WhiskeyDataset, 
+    | 'name'
+    | 'size'
+    | 'proof'
+    | 'abv'
+    | 'spirit_type'
+    | 'popularity'
+    | 'avg_msrp'
+    | 'fair_price'
+    | 'shelf_price'
+    | 'ranking'
+>;

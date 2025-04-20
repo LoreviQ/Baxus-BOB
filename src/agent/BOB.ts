@@ -1,5 +1,5 @@
 import { AgentBuilder, systemProvider, AgentBuilderSettings } from "@olivertj/agent-builder"
-import { BOBPrompts } from "@/agent/prompts/BOB"
+import { BOBPrompts } from "@/agent/prompt"
 import { barProvider} from "@/agent/providers"
 
 export function buildBOB(username:string): AgentBuilder{

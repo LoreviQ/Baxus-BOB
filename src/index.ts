@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import { connectDB } from '@/config/database';
 import BOBRouter from '@/routes/BOB';
 import dotenv from 'dotenv';
-import { WhiskeyData } from '@/types/WhiskeyData';
+import { WhiskeyDataset } from '@/types/WhiskeyData';
 import { loadWhiskeyData } from '@/utils/whiskeyLoader';
 
 dotenv.config();
@@ -11,10 +11,10 @@ dotenv.config();
 declare global {
     namespace NodeJS {
         interface Global {
-            whiskeyData: WhiskeyData[];
+            whiskeyData: WhiskeyDataset[];
         }
     }
-    var whiskeyData: WhiskeyData[];
+    var whiskeyData: WhiskeyDataset[];
 }
 
 const app = express();

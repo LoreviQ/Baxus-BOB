@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
-import { WhiskeyData } from '../types/WhiskeyData';
+import { WhiskeyDataset } from '../types/WhiskeyData';
 
-export const loadWhiskeyData = (): WhiskeyData[] => {
+export const loadWhiskeyData = (): WhiskeyDataset[] => {
     const tsvPath = path.join(__dirname, '..', 'dataset.tsv');
     const fileContent = fs.readFileSync(tsvPath, 'utf-8');
     const lines = fileContent.trim().split('\n');
@@ -25,7 +25,7 @@ export const loadWhiskeyData = (): WhiskeyData[] => {
             }
         });
         
-        return entry as WhiskeyData;
+        return entry as WhiskeyDataset;
     });
 
     return data;
