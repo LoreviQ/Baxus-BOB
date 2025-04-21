@@ -21,7 +21,7 @@ const formatTimeAgo = (timestamp: string): string => {
 export const barProvider = (username: string): Provider => ({
     key: 'bar',
     type: 'system',
-    index: 0,
+    order: 0,
     title: `${username}'s Bar`,
     execute: async () => {
         const response = await axios.get<BarDataAPI[]>(`http://services.baxus.co/api/bar/user/${username}`);
@@ -43,7 +43,7 @@ export const barProvider = (username: string): Provider => ({
 export const datasetProvider = (): Provider => ({
     key: 'dataset',
     type: 'system',
-    index: 1,
+    order: 1,
     title: 'Whiskey Dataset',
     execute: async () => {
         const dataset = global.whiskeyData;
@@ -67,7 +67,7 @@ export const datasetProvider = (): Provider => ({
 export const knowledgeProvider = (username: string): Provider => ({
     key: 'knowledge',
     type: 'system',
-    index: 2,
+    order: 2,
     title: `Knowledge about ${username}`,
     execute: async () => {
         const userKnowledge = await getUserKnowledge(username);
@@ -82,7 +82,7 @@ export const knowledgeProvider = (username: string): Provider => ({
 export const messageHistoryProvider = (threadId: string): Provider => ({
     key: 'message_history',
     type: 'prompt',
-    index: 0,
+    order: 0,
     title: `Message History`,
     execute: async () => {
         const messages = await getMessagesByThread(threadId);

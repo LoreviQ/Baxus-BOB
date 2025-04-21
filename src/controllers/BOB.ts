@@ -40,7 +40,8 @@ export const handleMessage = async (req: Request<{}, {}, MessageRequest>, res: R
         
         // -------- BOB LOGIC HERE --------
         const bob = await buildBOB(username, threadId);
-        const bobsMessage = await bob.generateResponse();
+        const results = await bob.execute();
+        const bobsMessage = results['reply'];
         const bobsMessageString = typeof bobsMessage === 'string' ? bobsMessage : JSON.stringify(bobsMessage);
         // --------------------------------
 
