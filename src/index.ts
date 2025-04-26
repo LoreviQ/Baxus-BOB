@@ -4,6 +4,7 @@ import BOBRouter from '@/routes/BOB';
 import dotenv from 'dotenv';
 import { WhiskeyDataset } from '@/types/WhiskeyData';
 import { loadWhiskeyData } from '@/utils/whiskeyLoader';
+import cors from 'cors';
 
 dotenv.config();
 
@@ -26,6 +27,14 @@ console.log(`Loaded ${global.whiskeyData.length} whiskey entries`);
 
 // Connect to MongoDB
 connectDB();
+
+// CORS
+app.use(cors({
+    origin: [
+      'http://localhost:5173', // Vite dev server
+      'https://baxus-frontend-1037939514360.europe-west1.run.app' // Production frontend
+    ]
+  }));
 
 // Add JSON middleware
 app.use(express.json());
