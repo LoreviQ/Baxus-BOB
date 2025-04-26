@@ -2,28 +2,12 @@ import express, { Request, Response, NextFunction } from 'express';
 import { connectDB } from '@/config/database';
 import BOBRouter from '@/routes/BOB';
 import dotenv from 'dotenv';
-import { WhiskeyDataset } from '@/types/WhiskeyData';
-import { loadWhiskeyData } from '@/utils/whiskeyLoader';
 import cors from 'cors';
 
 dotenv.config();
 
-// Declare global variable
-declare global {
-    namespace NodeJS {
-        interface Global {
-            whiskeyData: WhiskeyDataset[];
-        }
-    }
-    var whiskeyData: WhiskeyDataset[];
-}
-
 const app = express();
 const port = process.env.PORT || 3000;
-
-// Initialize global data
-global.whiskeyData = loadWhiskeyData();
-console.log(`Loaded ${global.whiskeyData.length} whiskey entries`);
 
 // Connect to MongoDB
 connectDB();

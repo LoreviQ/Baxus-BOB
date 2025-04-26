@@ -3,6 +3,7 @@ import { BarDataAPI, BarContent, WhiskeyContent } from '@/types';
 import { getUserKnowledge } from '@/models/UserKnowledge';
 import { getMessagesByThread } from '@/models/Message';
 import { getThreadById } from '@/models/Thread';
+import WhiskeyData from '@/models/WhiskeyData';
 import axios from 'axios';
 
 const formatTimeAgo = (timestamp: string): string => {
@@ -46,8 +47,8 @@ export const datasetProvider = (): Provider => ({
     order: 1,
     title: 'Whiskey Dataset',
     execute: async () => {
-        const dataset = global.whiskeyData;
-        let whiskeyConent: WhiskeyContent[] = dataset.map(item => ({
+        const whiskeyData = await WhiskeyData.find().sort({ ranking: 1 });
+        const whiskeyContent: WhiskeyContent[] = whiskeyData.map(item => ({
             name: item.name,
             size: item.size,
             proof: item.proof,
@@ -59,8 +60,8 @@ export const datasetProvider = (): Provider => ({
             shelf_price: item.shelf_price,
             ranking: item.ranking
         }));
-        whiskeyConent = whiskeyConent.slice(0, 10); // Limit to 10 items for performance
-        return wrapInJsonBlock(JSON.stringify(whiskeyConent, null, 2));
+
+        return wrapInJsonBlock(JSON.stringify(whiskeyContent, null, 2));
     }
 });
 
