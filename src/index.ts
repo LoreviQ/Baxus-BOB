@@ -16,7 +16,8 @@ connectDB();
 app.use(cors({
     origin: [
       'http://localhost:5173', // Vite dev server
-      'https://baxus-frontend-1037939514360.europe-west1.run.app' // Production frontend
+      'https://baxus-frontend-1037939514360.europe-west1.run.app', // Production frontend
+      'https://baxathon.oliver.tj' // Production domain
     ]
   }));
 
